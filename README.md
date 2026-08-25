@@ -5,7 +5,7 @@
 [![Node.js 20+](https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white)](package.json)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Turn a checked-out repository into Mintlify documentation and a Replay QA runtime-quality loop.
+Turn a checked-out repository into Mintlify documentation, a Replay QA runtime-quality loop, and an evidence-based infrastructure readiness plan.
 
 ```text
 repository source → evidence-based docs → running preview → root-caused bugs
@@ -29,6 +29,8 @@ After the first npm release, the shorter command will be `npx infra-starter-pack
 3. **Connects to Replay QA** — creates a QA project for a running web app, waits for autonomous exploration, and retrieves root-caused bug reports.
 4. **Protects existing work** — records hashes in `.infra-starter/manifest.json`, refreshes unchanged generated files, and stops before overwriting user edits.
 5. **Dogfoods Replay** — deploys this repository's [showcase](https://hamedrabah.github.io/infra-starter-pack/) and targets it with a scheduled Replay QA quality gate.
+6. **Adds a security baseline** — generates a commit-scoped TruffleHog secret scan pinned to an immutable release commit.
+7. **Recommends tools from evidence** — suggests Socket for dependency manifests, Braintrust for AI dependencies, and Stainless for authoritative OpenAPI contracts.
 
 Replay QA tests a **running web application**, not source code in isolation. Source scanning describes what exists; Replay supplies behavioral evidence about whether it works.
 
@@ -49,6 +51,21 @@ npx --yes mint@4.2.808 validate
 ```
 
 Connect the repository to Mintlify through the Mintlify dashboard to deploy the generated site.
+
+## a16z Infrastructure tool layer
+
+The scanner evaluates four complementary tools in the current [a16z Infrastructure portfolio](https://a16z.com/infra/). It does not turn the starter into a portfolio logo wall: each addition owns a distinct failure mode and hosted products require an explicit opt-in.
+
+| Tool | Failure mode | Selection rule | Default action |
+| --- | --- | --- | --- |
+| [TruffleHog](https://trufflesecurity.com/trufflehog) by Truffle Security | Committed credentials | Every repository | Generate a token-free GitHub Actions check |
+| [Socket](https://docs.socket.dev/docs/socket-for-github-installation) | Malicious or risky dependencies | A dependency manifest is present | Recommend the GitHub App or authenticated CLI scan |
+| [Braintrust](https://www.braintrust.dev/docs/evaluate/run-evaluations) | Regressing model, prompt, or agent behavior | An AI SDK dependency is present | Recommend deterministic CI evals |
+| [Stainless](https://www.stainless.com/docs/quickstart-cli/) | Handwritten SDK drift | An OpenAPI contract is present | Recommend generated SDKs, CLI, or MCP server |
+
+Generation itself performs no network request and uploads no repository data. TruffleHog runs only when the generated workflow executes; the three hosted integrations require the repository owner to install or authenticate them.
+
+Other strong portfolio products were deliberately left conditional rather than forced into every repo: Trunk is most useful after CI/flaky-test pain appears; Vantage needs actual cloud-spend inputs; Resourcely needs an infrastructure-as-code surface; and Nx is a monorepo architecture choice, not a universal readiness check.
 
 ## Replay QA
 
@@ -90,8 +107,10 @@ Add `REPLAY_QA_TOKEN` as a GitHub Actions repository secret to activate the sche
 | `docs/architecture.mdx` | Detected technical inventory and scripts |
 | `docs/api-overview.mdx` | OpenAPI sources and heuristic route inventory |
 | `docs/quality.mdx` | Replay QA operating guide |
-| `docs/infra-starter-scan.json` | Machine-readable scan evidence |
+| `docs/tooling.mdx` | Signal-based a16z Infrastructure tool recommendations |
+| `.infra-starter/scan-report` | Machine-readable JSON scan evidence (extensionless so Mintlify does not treat it as an API contract) |
 | `.github/workflows/infra-starter.yml` | Mintlify validation on pushes and pull requests |
+| `.github/workflows/infra-security.yml` | Pinned TruffleHog scan of changed commits |
 | `.infra-starter/manifest.json` | Ownership hashes used for safe regeneration |
 
 Run `init` again to refresh unmodified generated files. If a generated target was edited manually, the CLI exits before changing any target. Use `--force` only when replacing those edits is intentional.
@@ -102,6 +121,7 @@ Run `init` again to refresh unmodified generated files. If a generated target wa
 - Frameworks: Next.js, React, Express, Fastify, Hono, NestJS, Vue, Svelte, Astro, and Remix from package metadata.
 - API contracts: OpenAPI or Swagger JSON/YAML files.
 - Route heuristics: common Express-style declarations and Next.js API route filenames.
+- Tool fit: dependency manifests, supported AI SDK packages, and authoritative OpenAPI inputs.
 
 Route detection is deliberately labeled as heuristic. It does not execute source code and does not replace an OpenAPI contract.
 
@@ -143,6 +163,11 @@ CI tests Node.js 20 and 22. See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md
 - [Mint CLI validation](https://www.mintlify.com/docs/cli/commands)
 - [Replay QA overview](https://docs.replay.io/basics/replay-qa/overview)
 - [Replay QA OpenAPI specification](https://loop-qa.replay.io/api/v1/openapi.json)
+- [a16z Infrastructure portfolio](https://a16z.com/infra/)
+- [a16z investment in Socket](https://a16z.com/announcement/investing-in-socket/)
+- [a16z investment in Truffle Security](https://a16z.com/announcement/investing-in-truffle-security/)
+- [a16z investment in Braintrust](https://a16z.com/announcement/investing-in-braintrust/)
+- [a16z investment in Stainless](https://a16z.com/announcement/investing-in-stainless/)
 
 ## License
 

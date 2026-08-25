@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import fg from "fast-glob";
 import YAML from "yaml";
+import { recommendTools } from "./recommend.js";
 
 const IGNORE = [
   "**/node_modules/**",
@@ -10,7 +11,10 @@ const IGNORE = [
   "**/build/**",
   "**/.next/**",
   "**/coverage/**",
-  "**/vendor/**"
+  "**/vendor/**",
+  "**/test/fixtures/**",
+  "**/tests/fixtures/**",
+  "**/__fixtures__/**"
 ];
 
 const LANGUAGE_BY_EXTENSION = {
@@ -39,6 +43,17 @@ const FRAMEWORKS = {
   astro: "Astro",
   remix: "Remix"
 };
+
+const DEPENDENCY_MANIFESTS = [
+  "package.json", "package-lock.json", "pnpm-lock.yaml", "yarn.lock", "bun.lock", "bun.lockb",
+  "requirements.txt", "pyproject.toml", "poetry.lock", "Pipfile", "go.mod", "Cargo.toml",
+  "Gemfile", "pom.xml", "build.gradle", "build.gradle.kts"
+];
+
+const AI_DEPENDENCIES = new Set([
+  "openai", "@anthropic-ai/sdk", "ai", "langchain", "@langchain/core", "braintrust",
+  "@google/generative-ai", "cohere-ai", "groq-sdk", "ollama"
+]);
 
 async function readJson(file) {
   try {
@@ -137,7 +152,7 @@ export async function scanRepository(inputRoot = process.cwd()) {
   const openapi = await findOpenApi(root);
   const routes = await findRoutes(root, sourceFiles.filter((file) => /\.(?:js|jsx|ts|tsx)$/.test(file)));
 
-  return {
+  const report = {
     schemaVersion: 1,
     scannedAt: new Date().toISOString(),
     root,
@@ -152,6 +167,12 @@ export async function scanRepository(inputRoot = process.cwd()) {
     readme: readme || null,
     openapi,
     routes,
-    totals: { files: files.length, sourceFiles: sourceFiles.length }
+    totals: { files: files.length, sourceFiles: sourceFiles.length },
+    signals: {
+      dependencyManifests: files.filter((file) => DEPENDENCY_MANIFESTS.includes(path.basename(file))).slice(0, 100),
+      aiDependencies: Object.keys(dependencies).filter((dependency) => AI_DEPENDENCIES.has(dependency)).sort()
+    }
   };
+  report.toolingRecommendations = recommendTools(report);
+  return report;
 }

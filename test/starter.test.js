@@ -14,6 +14,8 @@ test("scanner finds frameworks, OpenAPI, and routes", async () => {
   assert.deepEqual(report.frameworks, ["React", "Express"]);
   assert.equal(report.openapi[0].title, "Tiny API");
   assert.deepEqual(report.routes.map((route) => `${route.method} ${route.path}`), ["GET /health", "POST /widgets"]);
+  assert.deepEqual(report.signals.dependencyManifests, ["package.json"]);
+  assert.deepEqual(report.toolingRecommendations.filter((item) => item.fit === "add-now").map((item) => item.tool), ["TruffleHog", "Socket", "Stainless"]);
 });
 
 test("generator writes Mintlify docs and workflow", async () => {
@@ -22,6 +24,7 @@ test("generator writes Mintlify docs and workflow", async () => {
   const report = await scanRepository(temp);
   const files = await generateStarter(report);
   assert(files.includes("docs.json"));
+  assert(files.includes(".infra-starter/scan-report"));
   assert(files.includes(".infra-starter/manifest.json"));
   const config = JSON.parse(await fs.readFile(path.join(temp, "docs.json"), "utf8"));
   assert.equal(config.navigation.groups[1].openapi, "openapi.yaml");
@@ -30,6 +33,24 @@ test("generator writes Mintlify docs and workflow", async () => {
   const workflow = await fs.readFile(path.join(temp, ".github/workflows/infra-starter.yml"), "utf8");
   assert.match(workflow, /mint@4\.2\.808 validate/);
   assert.doesNotMatch(workflow, /REPLAY_QA_TOKEN/);
+  const tooling = await fs.readFile(path.join(temp, "docs/tooling.mdx"), "utf8");
+  assert.match(tooling, /TruffleHog/);
+  assert.match(tooling, /Stainless/);
+  const security = await fs.readFile(path.join(temp, ".github/workflows/infra-security.yml"), "utf8");
+  assert.match(security, /trufflesecurity\/trufflehog@6f3c981e7b77f235fd2702dd74af25fc4b72bf11/);
+  assert.doesNotMatch(security, /secrets\./);
+  assert.match(await fs.readFile(path.join(temp, "docs/index.mdx"), "utf8"), /^---/);
+});
+
+test("scanner recommends Braintrust only when AI dependencies are present", async () => {
+  const temp = await fs.mkdtemp(path.join(os.tmpdir(), "infra-starter-ai-"));
+  await fs.cp(fixture, temp, { recursive: true });
+  const packageJson = JSON.parse(await fs.readFile(path.join(temp, "package.json"), "utf8"));
+  packageJson.dependencies.openai = "^5.0.0";
+  await fs.writeFile(path.join(temp, "package.json"), `${JSON.stringify(packageJson, null, 2)}\n`);
+  const report = await scanRepository(temp);
+  assert.deepEqual(report.signals.aiDependencies, ["openai"]);
+  assert.equal(report.toolingRecommendations.find((item) => item.tool === "Braintrust").fit, "add-now");
 });
 
 test("generator safely refreshes its own files", async () => {

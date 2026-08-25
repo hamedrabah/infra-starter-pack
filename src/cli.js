@@ -12,6 +12,7 @@ function summary(report) {
   console.log(`  Languages: ${report.languages.map((item) => item.name).join(", ") || "none detected"}`);
   console.log(`  Frameworks: ${report.frameworks.join(", ") || "none detected"}`);
   console.log(`  OpenAPI: ${report.openapi.length} spec(s) · Routes: ${report.routes.length} detected`);
+  console.log(`  Tooling: ${report.toolingRecommendations.filter((item) => item.fit === "add-now").map((item) => item.tool).join(", ")}`);
 }
 
 async function readDesignDocument(root) {

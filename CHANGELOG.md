@@ -6,6 +6,9 @@ This project follows [Semantic Versioning](https://semver.org/). Until `1.0.0`, 
 
 ### Added
 
+- Signal-based recommendations for Truffle Security, Socket, Braintrust, and Stainless from the a16z Infrastructure portfolio.
+- A pinned, credential-free TruffleHog secret-scanning workflow, dogfooded in this repository.
+- Dependency-manifest and AI-SDK detection in the machine-readable repository scan.
 - Repository scanner for languages, frameworks, OpenAPI documents, and common JavaScript/TypeScript HTTP routes.
 - Mintlify configuration, MDX pages, scan report, and GitHub Actions generation.
 - Replay QA project creation, status polling, bug retrieval, and private JSON reports.
