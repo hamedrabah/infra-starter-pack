@@ -1,0 +1,41 @@
+{
+  "name": "infra-starter-pack",
+  "version": "0.1.0",
+  "description": "One command to turn a GitHub repo into Mintlify docs and a Replay QA quality loop.",
+  "type": "module",
+  "bin": {
+    "infra-starter": "bin/infra-starter.js"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "check": "node --check bin/infra-starter.js && node --check src/*.js && npm test",
+    "demo": "node bin/infra-starter.js scan test/fixtures/basic"
+  },
+  "keywords": [
+    "mintlify",
+    "replay.io",
+    "documentation",
+    "qa",
+    "github",
+    "developer-tools"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "commander": "^14.0.0",
+    "fast-glob": "^3.3.3",
+    "picocolors": "^1.1.1",
+    "yaml": "^2.8.1"
+  }
+}
