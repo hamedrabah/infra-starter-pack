@@ -15,7 +15,7 @@ jobs:
       REPLAY_QA_TOKEN: ${{ secrets.REPLAY_QA_TOKEN }}
       REPLAY_QA_TARGET_URL: https://hamedrabah.github.io/infra-starter-pack/
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 20
