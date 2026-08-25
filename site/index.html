@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Generate Mintlify docs and a Replay QA quality loop from one repository-aware command.">
+    <title>Infra Starter Pack</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="nav">
+      <a class="brand" href="#top" aria-label="Infra Starter Pack home">
+        <span class="brand-mark" aria-hidden="true">IS</span>
+        <span>Infra Starter Pack</span>
+      </a>
+      <a class="github-link" href="https://github.com/hamedrabah/infra-starter-pack">View on GitHub <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="eyebrow"><span class="status-dot"></span> Open-source infrastructure automation</div>
+        <h1>Documentation explains it.<br><span>Runtime evidence proves it.</span></h1>
+        <p class="lede">Scan a repository, generate Mintlify-ready API documentation, and hand the running product to Replay QA for autonomous testing and root-cause analysis.</p>
+
+        <div class="command-card" aria-labelledby="command-title">
+          <div class="command-header">
+            <span id="command-title">Build your command</span>
+            <button id="copy-command" type="button">Copy</button>
+          </div>
+          <pre><code id="command-output">npx github:hamedrabah/infra-starter-pack init .</code></pre>
+          <div class="controls">
+            <label><input id="replay-toggle" type="checkbox"> Launch Replay QA</label>
+            <label class="url-control" for="target-url">Preview URL</label>
+            <input id="target-url" type="url" value="https://preview.example.com" disabled>
+          </div>
+          <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="pipeline" aria-labelledby="pipeline-title">
+        <div class="section-heading">
+          <p>One evidence loop</p>
+          <h2 id="pipeline-title">From repository shape to verified behavior</h2>
+        </div>
+        <ol class="steps">
+          <li>
+            <span class="step-number">01</span>
+            <h3>Scan</h3>
+            <p>Inventory languages, frameworks, scripts, OpenAPI files, and observable routes without executing project code.</p>
+          </li>
+          <li>
+            <span class="step-number">02</span>
+            <h3>Document</h3>
+            <p>Generate Mintlify configuration, MDX guides, interactive API navigation, and a machine-readable evidence report.</p>
+          </li>
+          <li>
+            <span class="step-number">03</span>
+            <h3>Exercise</h3>
+            <p>Replay QA explores the running app, creates journeys, captures runtime recordings, and finds broken behavior.</p>
+          </li>
+          <li>
+            <span class="step-number">04</span>
+            <h3>Diagnose</h3>
+            <p>Retrieve open bugs with reproduction steps and root-cause evidence, then fail the quality gate when needed.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="trust" aria-labelledby="trust-title">
+        <div>
+          <p class="kicker">Safe by construction</p>
+          <h2 id="trust-title">Automation that knows where to stop.</h2>
+        </div>
+        <ul>
+          <li><strong>Hash-based ownership</strong><span>Refreshes its own output while preserving user edits.</span></li>
+          <li><strong>Runtime honesty</strong><span>Labels route detection as heuristic and treats OpenAPI as authoritative.</span></li>
+          <li><strong>Credential discipline</strong><span>Reads Replay tokens from the environment and writes private reports.</span></li>
+          <li><strong>Dogfooded quality</strong><span>This page is deployed from the repo and is the target of its Replay QA workflow.</span></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <span>MIT licensed · Node.js 20+</span>
+      <span>Mintlify for knowledge · Replay QA for runtime truth</span>
+    </footer>
+  </body>
+</html>

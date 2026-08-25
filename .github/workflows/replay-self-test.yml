@@ -1,0 +1,45 @@
+name: Replay QA self-test
+
+on:
+  schedule:
+    - cron: "17 16 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    env:
+      REPLAY_QA_TOKEN: ${{ secrets.REPLAY_QA_TOKEN }}
+      REPLAY_QA_TARGET_URL: https://hamedrabah.github.io/infra-starter-pack/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Check Replay QA configuration
+        id: replay-config
+        run: |
+          if [ -n "$REPLAY_QA_TOKEN" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Add the REPLAY_QA_TOKEN repository secret to activate dogfooding."
+          fi
+      - name: Wait for the showcase
+        if: steps.replay-config.outputs.configured == 'true'
+        run: curl --fail --retry 8 --retry-all-errors --retry-delay 5 "$REPLAY_QA_TARGET_URL"
+      - name: Run Replay QA against this repository's showcase
+        if: steps.replay-config.outputs.configured == 'true'
+        run: node bin/infra-starter.js replay . --target-url "$REPLAY_QA_TARGET_URL" --budget 10 --wait --timeout 45 --fail-on-bugs --report infra-reports/replay-self-test.json
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.replay-config.outputs.configured == 'true'
+        with:
+          name: replay-self-test-report
+          path: infra-reports/replay-self-test.json
+          if-no-files-found: warn
+          retention-days: 14

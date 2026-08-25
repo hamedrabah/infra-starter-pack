@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
+import fs from "node:fs/promises";
 import http from "node:http";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
-import { createReplayProject, waitForReplayProject } from "../src/replay.js";
+import { createReplayProject, waitForReplayProject, writeReplayReport } from "../src/replay.js";
 
 test("Replay client creates, polls, and returns bugs", async (context) => {
   const requests = [];
+  let statusAttempts = 0;
   const server = http.createServer(async (request, response) => {
     let body = "";
     for await (const chunk of request) body += chunk;
@@ -13,10 +17,16 @@ test("Replay client creates, polls, and returns bugs", async (context) => {
     if (request.method === "POST" && request.url === "/api/v1/projects") {
       response.end(JSON.stringify({ project_id: "project-123", url: "https://qa.replay.io/project-123" }));
     } else if (request.url === "/api/v1/projects/project-123/status") {
-      response.end(JSON.stringify({ open_bug_count: 1 }));
+      statusAttempts += 1;
+      if (statusAttempts === 1) {
+        response.statusCode = 503;
+        response.end(JSON.stringify({ detail: "temporary" }));
+      } else {
+        response.end(JSON.stringify({ open_bug_count: 1 }));
+      }
     } else if (request.url === "/api/v1/projects/project-123/timing") {
       response.end(JSON.stringify({ finished_at: "2026-08-24T12:00:00Z" }));
-    } else if (request.url === "/api/v1/projects/project-123/bugs?page_size=100") {
+    } else if (request.url === "/api/v1/projects/project-123/bugs?status=open&page_size=100") {
       response.end(JSON.stringify({ items: [{ id: "bug-1", status: "open" }] }));
     } else {
       response.statusCode = 404;
@@ -43,4 +53,27 @@ test("Replay client creates, polls, and returns bugs", async (context) => {
 
   const finished = await waitForReplayProject({ apiBase, token: "lqa_test", projectId: created.projectId, pollMs: 1, timeoutMs: 1000 });
   assert.equal(finished.bugs.items[0].id, "bug-1");
+  assert.equal(statusAttempts, 2);
+});
+
+test("Replay client validates targets before creating a project", async () => {
+  await assert.rejects(
+    createReplayProject({ token: "lqa_test", targetUrl: "file:///etc/passwd" }),
+    /must use http or https/
+  );
+  await assert.rejects(
+    createReplayProject({ token: "lqa_test", targetUrl: "https://user:pass@example.com" }),
+    /must not contain embedded credentials/
+  );
+  await assert.rejects(
+    createReplayProject({ token: "lqa_test", targetUrl: "https://example.com", budget: -1 }),
+    /non-negative number/
+  );
+});
+
+test("Replay report is written with owner-only permissions", async () => {
+  const temp = await fs.mkdtemp(path.join(os.tmpdir(), "infra-replay-report-"));
+  const destination = await writeReplayReport(path.join(temp, "report.json"), { bugs: [] });
+  const stat = await fs.stat(destination);
+  assert.equal(stat.mode & 0o777, 0o600);
 });

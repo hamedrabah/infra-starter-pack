@@ -25,7 +25,7 @@ async function readDesignDocument(root) {
 
 async function launchReplay(root, options, name) {
   const targetUrl = options.targetUrl || process.env.REPLAY_QA_TARGET_URL;
-  const token = options.token || process.env.REPLAY_QA_TOKEN;
+  const token = process.env.REPLAY_QA_TOKEN;
   const reverseProxy = Boolean(options.reverseProxy || /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::|\/|$)/.test(targetUrl || ""));
   const { projectId, project } = await createReplayProject({
     token,
@@ -54,6 +54,10 @@ async function launchReplay(root, options, name) {
     const destination = await writeReplayReport(path.resolve(root, options.report), result);
     console.log(`  Report: ${destination}`);
   }
+  const bugItems = result.bugs?.items || result.bugs?.results || result.bugs?.bugs || [];
+  if (options.failOnBugs && bugItems.length > 0) {
+    throw new Error(`Replay QA found ${bugItems.length} open bug${bugItems.length === 1 ? "" : "s"}.`);
+  }
   return result;
 }
 
@@ -61,11 +65,11 @@ function replayOptions(command, { requireTarget = false } = {}) {
   const targetOption = requireTarget ? "requiredOption" : "option";
   return command
     [targetOption]("-u, --target-url <url>", "deployed or localhost web app URL", process.env.REPLAY_QA_TARGET_URL)
-    .option("--token <token>", "Replay QA token (prefer REPLAY_QA_TOKEN)", process.env.REPLAY_QA_TOKEN)
     .option("--instructions <text>", "flows Replay QA should prioritize", "Explore the main user journeys, error states, and regressions.")
     .option("--budget <credits>", "Replay QA credit budget", "20")
     .option("--reverse-proxy", "use Replay's localhost reverse proxy")
     .option("--wait", "wait until Replay QA is idle, then fetch bugs")
+    .option("--fail-on-bugs", "exit non-zero when Replay QA returns open bugs (requires --wait)")
     .option("--timeout <minutes>", "maximum wait time", "30")
     .option("--report <file>", "write the final Replay QA JSON report");
 }
@@ -91,6 +95,7 @@ export async function run(argv) {
     .option("--with-replay", "launch Replay QA after generating docs");
   replayOptions(init);
   init.action(async (directory, options) => {
+    if (options.failOnBugs && !options.wait) throw new Error("--fail-on-bugs requires --wait.");
     const report = await scanRepository(directory);
     summary(report);
     const files = await generateStarter(report, { force: options.force });
@@ -104,6 +109,7 @@ export async function run(argv) {
     .description("launch a Replay QA project for a running build")
     .argument("[directory]", "repository directory", "."), { requireTarget: true });
   replay.action(async (directory, options) => {
+    if (options.failOnBugs && !options.wait) throw new Error("--fail-on-bugs requires --wait.");
     const report = await scanRepository(directory);
     await launchReplay(report.root, options, report.name);
   });
