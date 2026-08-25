@@ -6,6 +6,8 @@ test("showcase references existing local assets and Replay dogfooding", async ()
   const html = await fs.readFile("site/index.html", "utf8");
   await fs.access("site/styles.css");
   await fs.access("site/app.js");
+  await fs.access("site/favicon.svg");
+  assert.match(html, /href="favicon\.svg"/);
   assert.match(html, /href="styles\.css"/);
   assert.match(html, /src="app\.js"/);
   assert.match(html, /target of its Replay QA workflow/);
