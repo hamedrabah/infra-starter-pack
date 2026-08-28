@@ -1,7 +1,7 @@
 {
   "name": "infra-starter-pack",
   "version": "0.1.0",
-  "description": "One command for Mintlify docs, Replay QA, secret scanning, and evidence-based infra tooling.",
+  "description": "Scan any repo and generate evidence-based docs, CI, security checks, and runtime QA.",
   "author": "Hamed Rabah",
   "type": "module",
   "sideEffects": false,
@@ -15,6 +15,7 @@
     "bin",
     "src",
     "README.md",
+    "action.yml",
     "LICENSE"
   ],
   "scripts": {

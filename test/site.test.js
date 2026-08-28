@@ -10,6 +10,15 @@ test("showcase references existing local assets and Replay dogfooding", async ()
   assert.match(html, /href="favicon\.svg"/);
   assert.match(html, /href="styles\.css"/);
   assert.match(html, /src="app\.js"/);
+  assert.match(html, /Star on GitHub/);
+  assert.match(html, /social-card\.svg/);
   assert.match(html, /target of its Replay QA workflow/);
   assert.match(await fs.readFile(".github/workflows/replay-self-test.yml", "utf8"), /--fail-on-bugs/);
+});
+
+test("repository exposes a composite GitHub Action", async () => {
+  const action = await fs.readFile("action.yml", "utf8");
+  assert.match(action, /using: composite/);
+  assert.match(action, /--markdown/);
+  assert.match(action, /GITHUB_STEP_SUMMARY/);
 });

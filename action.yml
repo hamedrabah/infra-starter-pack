@@ -1,0 +1,35 @@
+name: Infra Starter Pack
+description: Add an evidence-based infrastructure report to the GitHub Actions job summary.
+author: Hamed Rabah
+
+branding:
+  icon: activity
+  color: blue
+
+inputs:
+  path:
+    description: Repository-relative directory to scan
+    required: false
+    default: .
+
+outputs:
+  report:
+    description: Absolute path to the generated Markdown report
+    value: ${{ steps.scan.outputs.report }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install the scanner
+      shell: bash
+      run: npm ci --omit=dev --ignore-scripts --prefix "$GITHUB_ACTION_PATH"
+    - name: Scan repository evidence
+      id: scan
+      shell: bash
+      env:
+        INPUT_SCAN_PATH: ${{ inputs.path }}
+      run: |
+        report="$RUNNER_TEMP/infra-starter-report.md"
+        node "$GITHUB_ACTION_PATH/bin/infra-starter.js" scan "$GITHUB_WORKSPACE/$INPUT_SCAN_PATH" --markdown > "$report"
+        cat "$report" >> "$GITHUB_STEP_SUMMARY"
+        echo "report=$report" >> "$GITHUB_OUTPUT"

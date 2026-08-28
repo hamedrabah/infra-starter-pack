@@ -5,6 +5,7 @@ import pc from "picocolors";
 import { scanRepository } from "./scan.js";
 import { generateStarter } from "./generate.js";
 import { createReplayProject, waitForReplayProject, writeReplayReport } from "./replay.js";
+import { formatMarkdownReport } from "./format.js";
 
 function summary(report) {
   console.log(pc.bold(`\n${report.name}`));
@@ -84,9 +85,13 @@ export async function run(argv) {
   program.command("scan")
     .argument("[directory]", "repository directory", ".")
     .option("--json", "print machine-readable JSON")
+    .option("--markdown", "print a shareable Markdown infrastructure report")
     .action(async (directory, options) => {
+      if (options.json && options.markdown) throw new Error("Choose either --json or --markdown.");
       const report = await scanRepository(directory);
-      if (options.json) console.log(JSON.stringify(report, null, 2)); else summary(report);
+      if (options.json) console.log(JSON.stringify(report, null, 2));
+      else if (options.markdown) console.log(formatMarkdownReport(report));
+      else summary(report);
     });
 
   const init = program.command("init")

@@ -3,7 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Generate Mintlify docs and a Replay QA quality loop from one repository-aware command.">
+    <meta name="description" content="Scan any repository and generate evidence-based docs, CI, security checks, and runtime QA.">
+    <meta property="og:title" content="Infra Starter Pack">
+    <meta property="og:description" content="From repository evidence to docs, security checks, and runtime QA.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hamedrabah.github.io/infra-starter-pack/">
+    <meta property="og:image" content="https://hamedrabah.github.io/infra-starter-pack/social-card.svg">
+    <meta name="twitter:card" content="summary_large_image">
     <title>Infra Starter Pack</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="styles.css">
@@ -15,14 +21,19 @@
         <span class="brand-mark" aria-hidden="true">IS</span>
         <span>Infra Starter Pack</span>
       </a>
-      <a class="github-link" href="https://github.com/hamedrabah/infra-starter-pack">View on GitHub <span aria-hidden="true">↗</span></a>
+      <a class="github-link" href="https://github.com/hamedrabah/infra-starter-pack">Star on GitHub <span aria-hidden="true">★</span></a>
     </header>
 
     <main id="top">
       <section class="hero">
         <div class="eyebrow"><span class="status-dot"></span> Open-source infrastructure automation</div>
         <h1>Documentation explains it.<br><span>Runtime evidence proves it.</span></h1>
-        <p class="lede">Scan a repository, generate Mintlify-ready API documentation, and hand the running product to Replay QA for autonomous testing and root-cause analysis.</p>
+        <p class="lede">Scan any repository, turn its actual shape into Mintlify-ready documentation and security checks, then hand the running product to Replay QA.</p>
+
+        <div class="hero-actions">
+          <a class="primary-action" href="#github-action">Add to GitHub Actions</a>
+          <a class="secondary-action" href="https://github.com/hamedrabah/infra-starter-pack">Star on GitHub <span aria-hidden="true">★</span></a>
+        </div>
 
         <div class="command-card" aria-labelledby="command-title">
           <div class="command-header">
@@ -36,6 +47,23 @@
             <input id="target-url" type="url" value="https://preview.example.com" disabled>
           </div>
           <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="report" aria-labelledby="report-title">
+        <div class="section-heading">
+          <p>Evidence, not a logo wall</p>
+          <h2 id="report-title">A useful report before anything changes.</h2>
+        </div>
+        <div class="report-card" aria-label="Example infrastructure report">
+          <div class="report-header"><span>tiny-api · infrastructure report</span><span class="report-pass">scan complete</span></div>
+          <div class="signal-grid">
+            <div><span>Languages</span><strong>JavaScript</strong></div>
+            <div><span>Frameworks</span><strong>React, Express</strong></div>
+            <div><span>OpenAPI</span><strong>1 contract</strong></div>
+            <div><span>Routes</span><strong>2 observed</strong></div>
+          </div>
+          <div class="recommendation"><span>Add now</span><strong>TruffleHog · Socket · Stainless</strong><p>Selected from detected repository evidence; hosted tools remain opt-in.</p></div>
         </div>
       </section>
 
@@ -79,6 +107,16 @@
           <li><strong>Credential discipline</strong><span>Reads Replay tokens from the environment and writes private reports.</span></li>
           <li><strong>Dogfooded quality</strong><span>This page is deployed from the repo and is the target of its Replay QA workflow.</span></li>
         </ul>
+      </section>
+
+      <section id="github-action" class="action-section" aria-labelledby="action-title">
+        <div>
+          <p class="kicker">Copy, commit, inspect</p>
+          <h2 id="action-title">Put the report in every Actions run.</h2>
+          <p class="action-copy">The composite action scans the checked-out repository and writes a Markdown report to the job summary. It executes no project code and needs no token.</p>
+        </div>
+        <pre class="workflow"><code>- uses: actions/checkout@v7
+- uses: hamedrabah/infra-starter-pack@v0.1.0</code></pre>
       </section>
     </main>
 

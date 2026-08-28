@@ -2,25 +2,41 @@
 
 [![CI](https://github.com/hamedrabah/infra-starter-pack/actions/workflows/ci.yml/badge.svg)](https://github.com/hamedrabah/infra-starter-pack/actions/workflows/ci.yml)
 [![Replay QA self-test](https://github.com/hamedrabah/infra-starter-pack/actions/workflows/replay-self-test.yml/badge.svg)](https://github.com/hamedrabah/infra-starter-pack/actions/workflows/replay-self-test.yml)
+[![GitHub stars](https://img.shields.io/github/stars/hamedrabah/infra-starter-pack?style=flat&logo=github)](https://github.com/hamedrabah/infra-starter-pack/stargazers)
 [![Node.js 20+](https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white)](package.json)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Turn a checked-out repository into Mintlify documentation, a Replay QA runtime-quality loop, and an evidence-based infrastructure readiness plan.
+![Infra Starter Pack: know what your repo needs, prove what your app does](site/social-card.svg)
+
+**Know what your repo needs. Prove what your app does.**
+
+Scan any checked-out repository without executing its code. Get an evidence-based infrastructure report, generate Mintlify documentation and security checks, then connect the running product to Replay QA.
 
 ```text
-repository source → evidence-based docs → running preview → root-caused bugs
-                         Mintlify            Replay QA
+repository evidence → docs + controls → running preview → root-caused bugs
+                         Mintlify                Replay QA
 ```
 
-## Status
+[Try the live command builder](https://hamedrabah.github.io/infra-starter-pack/) · [Use the GitHub Action](#github-action) · [Read the trust boundaries](#trust-boundaries)
 
-This is an early, tested `0.1.0` release candidate. The GitHub source works today; the package has not yet been published to npm.
+## Try it in 30 seconds
+
+Inspect a repository without changing it:
 
 ```bash
-npx github:hamedrabah/infra-starter-pack init .
+npx github:hamedrabah/infra-starter-pack scan .
 ```
 
-After the first npm release, the shorter command will be `npx infra-starter-pack init .`.
+```text
+tiny-api
+  3 files · 1 source file
+  Languages: JavaScript
+  Frameworks: React, Express
+  OpenAPI: 1 spec · Routes: 2 detected
+  Tooling: TruffleHog, Socket, Stainless
+```
+
+Use `--json` for automation or `--markdown` for a shareable report. The current `v0.1.0` source release runs directly from GitHub; an npm package is not published yet.
 
 ## What it does
 
@@ -36,11 +52,10 @@ Replay QA tests a **running web application**, not source code in isolation. Sou
 
 ## Quick start
 
-Inspect a repository without changing it:
+Create a Markdown infrastructure report:
 
 ```bash
-npx github:hamedrabah/infra-starter-pack scan .
-npx github:hamedrabah/infra-starter-pack scan . --json
+npx github:hamedrabah/infra-starter-pack scan . --markdown > infra-report.md
 ```
 
 Generate and validate the Mintlify starter:
@@ -51,6 +66,27 @@ npx --yes mint@4.2.808 validate
 ```
 
 Connect the repository to Mintlify through the Mintlify dashboard to deploy the generated site.
+
+## GitHub Action
+
+Add a read-only report to the Actions job summary. The action needs no token and does not execute project code.
+
+```yaml
+name: Infrastructure report
+on: [pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: hamedrabah/infra-starter-pack@v0.1.0
+```
+
+The `report` output contains the absolute path to the generated Markdown file if a later step needs to upload or inspect it.
 
 ## a16z Infrastructure tool layer
 
@@ -128,7 +164,7 @@ Route detection is deliberately labeled as heuristic. It does not execute source
 ## CLI reference
 
 ```text
-infra-starter scan [directory] [--json]
+infra-starter scan [directory] [--json | --markdown]
 infra-starter init [directory] [--force] [--target-url URL] [--wait]
 infra-starter replay [directory] --target-url URL [--budget N] [--wait] [--fail-on-bugs]
 ```

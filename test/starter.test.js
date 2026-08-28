@@ -5,6 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { scanRepository } from "../src/scan.js";
 import { generateStarter } from "../src/generate.js";
+import { formatMarkdownReport } from "../src/format.js";
 
 const fixture = path.resolve("test/fixtures/basic");
 
@@ -16,6 +17,15 @@ test("scanner finds frameworks, OpenAPI, and routes", async () => {
   assert.deepEqual(report.routes.map((route) => `${route.method} ${route.path}`), ["GET /health", "POST /widgets"]);
   assert.deepEqual(report.signals.dependencyManifests, ["package.json"]);
   assert.deepEqual(report.toolingRecommendations.filter((item) => item.fit === "add-now").map((item) => item.tool), ["TruffleHog", "Socket", "Stainless"]);
+});
+
+test("formatter produces an evidence-bounded Markdown report", async () => {
+  const report = await scanRepository(fixture);
+  const markdown = formatMarkdownReport(report);
+  assert.match(markdown, /^# Infrastructure report: tiny-api/m);
+  assert.match(markdown, /\*\*Languages:\*\* JavaScript \(1\)/);
+  assert.match(markdown, /\| Stainless \| Add now \|/);
+  assert.match(markdown, /Route detection is heuristic/);
 });
 
 test("generator writes Mintlify docs and workflow", async () => {
