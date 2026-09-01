@@ -88,9 +88,9 @@ jobs:
 
 The `report` output contains the absolute path to the generated Markdown file if a later step needs to upload or inspect it.
 
-## a16z Infrastructure tool layer
+## Infrastructure tool layer
 
-The scanner evaluates four complementary tools in the current [a16z Infrastructure portfolio](https://a16z.com/infra/). It does not turn the starter into a portfolio logo wall: each addition owns a distinct failure mode and hosted products require an explicit opt-in.
+The scanner evaluates four complementary tools from the broader infrastructure ecosystem. It does not turn the starter into a portfolio logo wall: each addition owns a distinct failure mode and hosted products require an explicit opt-in.
 
 | Tool | Failure mode | Selection rule | Default action |
 | --- | --- | --- | --- |
@@ -143,7 +143,7 @@ Add `REPLAY_QA_TOKEN` as a GitHub Actions repository secret to activate the sche
 | `docs/architecture.mdx` | Detected technical inventory and scripts |
 | `docs/api-overview.mdx` | OpenAPI sources and heuristic route inventory |
 | `docs/quality.mdx` | Replay QA operating guide |
-| `docs/tooling.mdx` | Signal-based a16z Infrastructure tool recommendations |
+| `docs/tooling.mdx` | Signal-based infrastructure tool recommendations |
 | `.infra-starter/scan-report` | Machine-readable JSON scan evidence (extensionless so Mintlify does not treat it as an API contract) |
 | `.github/workflows/infra-starter.yml` | Mintlify validation on pushes and pull requests |
 | `.github/workflows/infra-security.yml` | Pinned TruffleHog scan of changed commits |
@@ -199,11 +199,10 @@ CI tests Node.js 20 and 22. See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md
 - [Mint CLI validation](https://www.mintlify.com/docs/cli/commands)
 - [Replay QA overview](https://docs.replay.io/basics/replay-qa/overview)
 - [Replay QA OpenAPI specification](https://loop-qa.replay.io/api/v1/openapi.json)
-- [a16z Infrastructure portfolio](https://a16z.com/infra/)
-- [a16z investment in Socket](https://a16z.com/announcement/investing-in-socket/)
-- [a16z investment in Truffle Security](https://a16z.com/announcement/investing-in-truffle-security/)
-- [a16z investment in Braintrust](https://a16z.com/announcement/investing-in-braintrust/)
-- [a16z investment in Stainless](https://a16z.com/announcement/investing-in-stainless/)
+- [Socket documentation](https://docs.socket.dev/docs/socket-for-github-installation)
+- [TruffleHog documentation](https://trufflesecurity.com/trufflehog)
+- [Braintrust documentation](https://www.braintrust.dev/docs/evaluate/run-evaluations)
+- [Stainless documentation](https://www.stainless.com/docs/quickstart-cli/)
 
 ## License
 

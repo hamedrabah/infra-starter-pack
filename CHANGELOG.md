@@ -6,7 +6,7 @@ This project follows [Semantic Versioning](https://semver.org/). Until `1.0.0`, 
 
 ### Added
 
-- Signal-based recommendations for Truffle Security, Socket, Braintrust, and Stainless from the a16z Infrastructure portfolio.
+- Signal-based recommendations for Truffle Security, Socket, Braintrust, and Stainless from the broader infrastructure ecosystem.
 - A composite GitHub Action that writes an evidence-based Markdown report to the job summary.
 - Markdown report output through `scan --markdown`.
 - A pinned, credential-free TruffleHog secret-scanning workflow, dogfooded in this repository.
