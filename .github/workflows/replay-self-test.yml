@@ -36,7 +36,7 @@ jobs:
       - name: Run Replay QA against this repository's showcase
         if: steps.replay-config.outputs.configured == 'true'
         run: node bin/infra-starter.js replay . --target-url "$REPLAY_QA_TARGET_URL" --budget 10 --wait --timeout 45 --fail-on-bugs --report infra-reports/replay-self-test.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always() && steps.replay-config.outputs.configured == 'true'
         with:
           name: replay-self-test-report
