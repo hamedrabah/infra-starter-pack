@@ -17,14 +17,14 @@ repository evidence → docs + controls → running preview → root-caused bugs
                          Mintlify                Replay QA
 ```
 
-[Try the live command builder](https://hamedrabah.github.io/infra-starter-pack/) · [Use the GitHub Action](#github-action) · [Read the trust boundaries](#trust-boundaries)
+[View a real sample report](examples/tiny-api-report.md) · [GitHub Marketplace](https://github.com/marketplace/actions/infra-starter-pack) · [Try the live command builder](https://hamedrabah.github.io/infra-starter-pack/) · [Use the GitHub Action](#github-action) · [Read the trust boundaries](#trust-boundaries)
 
 ## Try it in 30 seconds
 
 Inspect a repository without changing it:
 
 ```bash
-npx github:hamedrabah/infra-starter-pack scan .
+npx github:hamedrabah/infra-starter-pack#v0.1.0 scan .
 ```
 
 ```text
@@ -37,6 +37,8 @@ tiny-api
 ```
 
 Use `--json` for automation or `--markdown` for a shareable report. The current `v0.1.0` source release runs directly from GitHub; an npm package is not published yet.
+
+The sample above comes from the checked-in [`tiny-api` fixture](test/fixtures/basic). [Read the full Markdown report](examples/tiny-api-report.md), including the evidence behind each recommendation.
 
 ## What it does
 
@@ -55,7 +57,7 @@ Replay QA tests a **running web application**, not source code in isolation. Sou
 Create a Markdown infrastructure report:
 
 ```bash
-npx github:hamedrabah/infra-starter-pack scan . --markdown > infra-report.md
+npx github:hamedrabah/infra-starter-pack#v0.1.0 scan . --markdown > infra-report.md
 ```
 
 Generate and validate the Mintlify starter:
