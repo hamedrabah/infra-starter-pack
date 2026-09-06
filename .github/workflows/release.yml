@@ -6,15 +6,59 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
+  artifacts:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Match tag to package version
+        run: |
+          node --input-type=module -e 'import p from "./package.json" with { type: "json" }; if (process.env.GITHUB_REF_NAME !== `v${p.version}`) process.exit(1)'
+      - name: Test and pack the release
+        run: |
+          mkdir -p dist
+          npm pack --pack-destination dist
+          npm sbom --sbom-format=spdx --omit=dev --package-lock-only > dist/sbom.spdx.json
+          cd dist
+          sha256sum ./*.tgz sbom.spdx.json > SHA256SUMS
+      - name: Attest build provenance
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: dist/*.tgz
+      - name: Attest dependency inventory
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: dist/*.tgz
+          sbom-path: dist/sbom.spdx.json
+      - name: Publish GitHub release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/*.tgz dist/sbom.spdx.json dist/SHA256SUMS \
+            --verify-tag --title "$GITHUB_REF_NAME" --notes-file .github/RELEASE_NOTES.md
   npm:
     runs-on: ubuntu-latest
     environment: npm
+    permissions:
+      contents: read
+      id-token: write
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org

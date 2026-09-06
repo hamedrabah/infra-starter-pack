@@ -24,7 +24,7 @@ repository evidence → docs + controls → running preview → root-caused bugs
 Inspect a repository without changing it:
 
 ```bash
-npx github:hamedrabah/infra-starter-pack#v0.1.0 scan .
+npx github:hamedrabah/infra-starter-pack#v0.1.1 scan .
 ```
 
 ```text
@@ -36,7 +36,7 @@ tiny-api
   Tooling: TruffleHog, Socket, Stainless
 ```
 
-Use `--json` for automation or `--markdown` for a shareable report. The current `v0.1.0` source release runs directly from GitHub; an npm package is not published yet.
+Use `--json` for automation or `--markdown` for a shareable report. The current `v0.1.1` source release runs directly from GitHub; an npm package is not published yet.
 
 The sample above comes from the checked-in [`tiny-api` fixture](test/fixtures/basic). [Read the full Markdown report](examples/tiny-api-report.md), including the evidence behind each recommendation.
 
@@ -57,7 +57,7 @@ Replay QA tests a **running web application**, not source code in isolation. Sou
 Create a Markdown infrastructure report:
 
 ```bash
-npx github:hamedrabah/infra-starter-pack#v0.1.0 scan . --markdown > infra-report.md
+npx github:hamedrabah/infra-starter-pack#v0.1.1 scan . --markdown > infra-report.md
 ```
 
 Generate and validate the Mintlify starter:
@@ -85,7 +85,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: hamedrabah/infra-starter-pack@v0.1.0
+      - uses: hamedrabah/infra-starter-pack@v0.1.1
 ```
 
 The `report` output contains the absolute path to the generated Markdown file if a later step needs to upload or inspect it.

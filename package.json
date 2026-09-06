@@ -1,6 +1,6 @@
 {
   "name": "infra-starter-pack",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Scan any repo and generate evidence-based docs, CI, security checks, and runtime QA.",
   "author": "Hamed Rabah",
   "type": "module",

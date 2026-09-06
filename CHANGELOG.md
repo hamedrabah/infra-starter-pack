@@ -2,6 +2,20 @@
 
 This project follows [Semantic Versioning](https://semver.org/). Until `1.0.0`, minor versions may include breaking changes documented here.
 
+## [0.1.1] - 2026-09-06
+
+### Added
+
+- Installable release assets, SHA-256 checksums, an SPDX dependency inventory,
+  and GitHub build-provenance and SBOM attestations.
+- Public OpenSSF Scorecard results on pushes and a weekly schedule.
+- A complete Markdown report generated from the checked-in tiny-api fixture.
+
+### Changed
+
+- Pin repository workflow actions to immutable commits and disable persisted
+  checkout credentials.
+
 ## [0.1.0] - 2026-08-28
 
 ### Added
