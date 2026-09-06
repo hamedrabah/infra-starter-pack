@@ -1,6 +1,7 @@
 # Infra Starter Pack
 
 [![CI](https://github.com/hamedrabah/infra-starter-pack/actions/workflows/ci.yml/badge.svg)](https://github.com/hamedrabah/infra-starter-pack/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/hamedrabah/infra-starter-pack/badge)](https://scorecard.dev/viewer/?uri=github.com/hamedrabah/infra-starter-pack)
 [![Replay QA self-test](https://github.com/hamedrabah/infra-starter-pack/actions/workflows/replay-self-test.yml/badge.svg)](https://github.com/hamedrabah/infra-starter-pack/actions/workflows/replay-self-test.yml)
 [![GitHub stars](https://img.shields.io/github/stars/hamedrabah/infra-starter-pack?style=flat&logo=github)](https://github.com/hamedrabah/infra-starter-pack/stargazers)
 [![Node.js 20+](https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white)](package.json)
@@ -39,6 +40,13 @@ tiny-api
 Use `--json` for automation or `--markdown` for a shareable report. The current `v0.1.1` source release runs directly from GitHub; an npm package is not published yet.
 
 The sample above comes from the checked-in [`tiny-api` fixture](test/fixtures/basic). [Read the full Markdown report](examples/tiny-api-report.md), including the evidence behind each recommendation.
+
+## Verify what you install
+
+The [v0.1.1 release](https://github.com/hamedrabah/infra-starter-pack/releases/tag/v0.1.1)
+includes an installable package, checksums, and an SPDX dependency inventory.
+GitHub artifact attestations connect the package to its build and source commit.
+[Verify the release](docs/releases.md) before installing it.
 
 ## What it does
 
